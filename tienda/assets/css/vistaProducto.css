@@ -11,9 +11,12 @@
 
 .vistaProducto .imagen{
     flex: 1 1 ;
-    
+    transition: transform 0.3s ease;
 }
 
+.vistaProducto .imagen:hover {
+    transform: scale(1.02);
+}
 
 .vistaProducto .texto{
     flex: 3 1  ;
@@ -28,6 +31,9 @@
     margin: 2rem 0;
     font-size: 3rem;
     font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 #descripcionProducto{
     margin: 2rem 0;
@@ -64,4 +70,14 @@
     padding: 1.2rem 1.5rem;
     color:white;
     background-color: black;
+    border: none;
+    border-radius: 1rem;
+    transition: background-color 0.3s, transform 0.1s;
+}
+#btnComprar:hover {
+    cursor: pointer;
+}
+#btnComprar:active {
+    background-color: #333;
+    transform: scale(0.98);
 }

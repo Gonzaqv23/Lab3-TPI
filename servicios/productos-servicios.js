@@ -1,4 +1,5 @@
-const url = "https://65480baf902874dff3acf283.mockapi.io/api/TpiLab3bis/productos";
+const url = "https://673d1ccf4db5a341d834122c.mockapi.io/productos";
+//const url = "https://65480baf902874dff3acf283.mockapi.io/api/TpiLab3bis/producto";
 
 
 async function listar(id) {

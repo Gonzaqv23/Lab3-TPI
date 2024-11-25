@@ -1,7 +1,7 @@
 import { Carrusel } from "./carrusel/carrusel.js";
 import {listarProductos } from "./listarProductos/listarProductos.js";
 import { vistaProducto } from "./listarProductos/vistaProducto.js";
-import { getUsuarioAutenticado, login, mostrarUsuario, register, setUsuarioAutenticado } from "./login/login.js";
+import { getUsuarioAutenticado, login, mostrarUsuario, register, logout } from "./login/login.js";
 
 export function RouterTienda(){
     let session = getUsuarioAutenticado();
@@ -21,8 +21,7 @@ export function RouterTienda(){
 
     }else if (hash === '#logout' ) {      
         
-        setUsuarioAutenticado(false, -1);
-        location.replace("tienda.html");
+        logout();
 
     }else if (hash === '' ) {
         

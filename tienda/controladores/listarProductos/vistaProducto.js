@@ -13,7 +13,40 @@ export async function vistaProducto(){
      * 6-El resultado de la función deberá asignarse al elemento .vistaProducto capturado previamente.
      * 7-Se deberá capturar el elemento html correspondiente al anchor btnComprar y enlazar el evento click a la función registrarCompra.  
     */
-   
+    const carrusel = document.querySelector('.carrusel');
+    const seccionProducto = document.querySelector('.seccionProductos');
+    const seccionLogin = document.querySelector('.seccionLogin');
+    const vistaProductoElement = document.querySelector('.vistaProducto');
+    
+    carrusel.innerHTML = '';
+    seccionProducto.innerHTML = '';
+    seccionLogin.innerHTML = '';
+    vistaProductoElement.innerHTML = '';
+    
+    const idProducto = leerParametro();
+
+    if (idProducto) {
+        try { 
+            const producto = await productosServices.listar(idProducto);
+            if (producto) {
+                const html = htmlVistaProducto(producto.id, producto.nombre, producto.descripcion, producto.precio, producto.foto);
+                vistaProductoElement.innerHTML = html;
+                const btnComprar = document.querySelector('#btnComprar');
+                if (btnComprar) {
+                    btnComprar.addEventListener('click', registrarCompra);
+                }
+            } else {
+                console.error('Producto no encontrado');
+                mostrarMensajeDeError('Producto no encontrado');
+            }
+        } catch (error) {
+            console.error('Error al listar el producto:', error);
+            mostrarMensajeDeError('Error al cargar el producto. Por favor, intenta de nuevo.');
+        }
+    } else {
+        console.error('ID de producto no válido');
+        mostrarMensajeDeError('ID de producto no válido');
+    }
 }
 
 function htmlVistaProducto(id, nombre, descripcion, precio, imagen) {
@@ -27,8 +60,26 @@ function htmlVistaProducto(id, nombre, descripcion, precio, imagen) {
      *   let cadena = `Hola, ${titulo} Claudia  en que podemos ayudarla`;
      *   
     */
-    
+   return `
+    <div class="imagen">
+        <img src="${imagen}" alt="producto">
+    </div>
+    <div class="texto">
+        <p id="nameProducto" data-idProducto=${id}>${nombre}</p>
+
+        <p id="descripcionProducto">${descripcion}</p>
+
+        <p id="precioProducto">${precio}</p>
+
+        <div class="form-group">
+            <label for="cantidadProducto">Cantidad</label>
+            <input type="number" step="1" min ="1" value="1" id="cantidadProducto">
+        </div>
+
+        <a id="btnComprar" >Comprar</a>
+    </div>`;
 }
+
 function leerParametro(){
     // Captura el idProducto de la dirección URL enviada por la página que llama
     const words = new URLSearchParams(window.location.search);
@@ -38,7 +89,7 @@ function leerParametro(){
 }
 
 
-function registrarCompra(){
+async function registrarCompra(event){
     /**1-Esta función es la encargada de procesar el evento click del anchor btnComprar.
      * 2-Luego deberá recuperar con la función getUsuarioAutenticado presente en el módulo login.js el objeto session
      * 3-Si la propiedad autenticado del objeto session es falso, el usuario no ha iniciado sesión, y se deberá emitir 
@@ -57,6 +108,40 @@ function registrarCompra(){
      * 10-Finalmente emitimos una alerta con la leyenda "Compra finalizada."
      *     
      */
+    event.preventDefault();
+    const session = getUsuarioAutenticado();
+    if (!session.autenticado) {
+        alert('Debe iniciar sesión antes de realizar una compra');
+        return;
+    }
+
+    const idUsuario = session.idUsuario;
+    const emailUsuario = session.email;
+    const idProducto = event.target.dataset.idproducto;
+    const nameProducto = document.getElementById('nameProducto').textContent;
+    const cantidad = document.getElementById('cantidadProducto').value;
+    const fechaISO = new Date().toISOString();
+    const fecha = new Date(fechaISO);
+    const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+    const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
     
-    
+    try { console.log("Registrando compra con los siguientes datos:", {
+        idUsuario,
+        emailUsuario,
+        idProducto,
+        nameProducto,
+        cantidad,
+        fechaFormateada });
+        const respuesta = await ventasServices.crear(idUsuario, emailUsuario, idProducto, nameProducto, cantidad, fechaFormateada);
+        console.log("Respuesta del servidor:", respuesta);
+        location.replace("tienda.html");
+        alert('Compra finalizada.');
+    } catch (error) {
+        console.error('Error al registrar la compra:', error);
+        alert('Error al registrar la compra. Por favor, intenta de nuevo.');
+    }
+}
+function mostrarMensajeDeError(mensaje) {
+    const contenedor = document.querySelector('.vistaProducto');
+    contenedor.innerHTML = `<p class="error">${mensaje}</p>`;
 }

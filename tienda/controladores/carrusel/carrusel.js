@@ -4,41 +4,41 @@ const htmlCarrusel =
 <div class="conteCarrousel">
     <div class="itemCarrousel" id="itemCarrousel-1">
         <div class="itemCarrouselTarjeta">
-            <img src="/img/slider/imagen1.png" alt="">
+            <img src="/img/slider/item1.jpg" alt="">
         </div>
         <div class="itemCarrouselArrows">
-            <a href="#itemCarrousel-3">
+            <span class="arrow-left" data-target="itemCarrousel-3">
                 <i class="fas fa-chevron-left"></i>
-            </a>
-            <a href="#itemCarrousel-2">
+            </span>
+            <span class="arrow-right" data-target="itemCarrousel-2">
                 <i class="fas fa-chevron-right"></i>
-            </a>
+            </span>
         </div>
     </div>
     <div class="itemCarrousel" id="itemCarrousel-2">
         <div class="itemCarrouselTarjeta">
-            <img src="/img/slider/imagen2.png" alt="">
+            <img src="/img/slider/item2.jpg" alt="">
         </div>
         <div class="itemCarrouselArrows">
-            <a href="#itemCarrousel-1">
+            <span class="arrow-left" data-target="itemCarrousel-1">
                 <i class="fas fa-chevron-left"></i>
-            </a>
-            <a href="#itemCarrousel-3">
+            </span>
+            <span class="arrow-right" data-target="itemCarrousel-3">
                 <i class="fas fa-chevron-right"></i>
-            </a>
+            </span>
         </div>
     </div>
     <div class="itemCarrousel" id="itemCarrousel-3">
         <div class="itemCarrouselTarjeta">
-            <img src="/img/slider/imagen3.png" alt="">
+            <img src="/img/slider/item3.jpg" alt="">
         </div>
         <div class="itemCarrouselArrows">
-            <a href="#itemCarrousel-2">
+            <span class="arrow-left" data-target="itemCarrousel-2">
                 <i class="fas fa-chevron-left"></i>
-            </a>
-            <a href="#itemCarrousel-1">
+            </span>
+            <span class="arrow-right" data-target="itemCarrousel-1">
                 <i class="fas fa-chevron-right"></i>
-            </a>
+            </span>
         </div>
     </div>
 </div>
@@ -52,4 +52,28 @@ export async function Carrusel(){
     let seccionLogin = d.querySelector(".seccionLogin");
     seccionLogin.innerHTML = "";
     seccionCarrusel.innerHTML = htmlCarrusel;
+
+    const items = document.querySelectorAll('.itemCarrousel');
+    const arrows = document.querySelectorAll('.itemCarrouselArrows span');
+    let currentIndex = 0;
+    function updateCarousel(index) {
+        items.forEach((item, i) => {
+            item.classList.remove('active', 'previous', 'next');
+            if (i === index) {
+                item.classList.add('active')
+            } else if (i === (index - 1 + items.length) % items.length) {
+                item.classList.add('previous');
+            } else if (i === (index + 1) % items.length) {
+                item.classList.add('next');
+            }
+        });
+    }
+    arrows.forEach(arrow => {
+        arrow.addEventListener('click', function() {
+            const direction = this.classList.contains('arrow-left') ? -1 : 1;
+            currentIndex = (currentIndex + direction + items.length) % items.length;
+            updateCarousel(currentIndex);
+        });
+    });
+    updateCarousel(currentIndex);
 }

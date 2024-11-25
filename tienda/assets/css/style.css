@@ -17,19 +17,24 @@ body{
 header{
     display: flex;
     justify-content: space-between;
-    background-color: #ffc107;
+    background-color: #2C3E50;
     min-height: 10vh;
     padding: 1rem;
     box-shadow: 1px 1px 10px ;
 }
-header img{
+header h1{
+    font-family: 'Gill Sans MT', 'Gill Sans', Calibri, 'Trebuchet MS', sans-serif;
     padding: 1rem;
+    color: #ECF0F1;
     object-fit:contain;
+}
+header h1::first-letter {
+    color: #1ABC9C;
 }
 a{
     text-decoration: none;
     font-weight:bold;
-    color: black;
+    color: #ECF0F1;
 }
 
 .login{
