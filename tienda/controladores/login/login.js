@@ -154,7 +154,18 @@ async function  registrarUsuario(e){
         return;
     }
 
-    await usuariosServices.crear(inputEmail.value, inputPassword.value);
+    const apellido = '';
+    const nombre = '';
+    const correo = inputEmail.value;
+    const password = inputPassword.value;
+    const avatar = '';
+    const pais = '';
+    const ciudad = '';
+    const direccion = '';
+    const telefono = '';
+    const role = 'admin';
+
+    await usuariosServices.crear(apellido, nombre, correo, password, avatar, pais, ciudad, direccion, telefono, role);
 
     mostrarMensaje('Email registrado');
     window.location.href = "#login";
